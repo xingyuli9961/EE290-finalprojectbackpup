@@ -1,0 +1,3 @@
+[submodule "XNORNET1"]
+	path = XNORNET1
+	url = https://github.com/jiecaoyu/XNOR-Net-PyTorch.git
