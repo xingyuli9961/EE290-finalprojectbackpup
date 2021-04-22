@@ -8,10 +8,10 @@ module XNORConvBox
         input wire clock,
         input wire reset,
         input wire weight_in_valid[NUMHELPER-1:0],
-        input wire [31:0] pe_in_a[NUMHELPER-1:0],  // input activation
+        input wire [24:0] pe_in_a[NUMHELPER-1:0],  // input activation
         input wire [24:0] pe_in_b[NUMHELPER-1:0],  // weight
 
-        output reg signed [5:0] pe_out_c[NUMHELPER-1:0]
+        output signed [5:0] pe_out_c[NUMHELPER-1:0]
     );
     genvar i;
     generate
@@ -22,7 +22,7 @@ module XNORConvBox
                 .weight_in_valid(weight_in_valid[i]),
                 .pe_in_a(pe_in_a[i]),
                 .pe_in_b(pe_in_b[i]),
-                .pe_out_c(pe_out_c[0])
+                .pe_out_c(pe_out_c[i])
             );
         end
     endgenerate
@@ -68,4 +68,45 @@ module XNORconvHelper
         tmpxnor = pe_in_a ^~ weight_buf;
         tmp = tmpxnor[0] + tmpxnor[1] + tmpxnor[2] + tmpxnor[3] + tmpxnor[4] + tmpxnor[5] + tmpxnor[6] + tmpxnor[7] + tmpxnor[8] + tmpxnor[9] + tmpxnor[10] + tmpxnor[11] + tmpxnor[12] + tmpxnor[13] + tmpxnor[14] + tmpxnor[15] + tmpxnor[16] + tmpxnor[17] + tmpxnor[18] + tmpxnor[19] + tmpxnor[20] + tmpxnor[21] + tmpxnor[22] + tmpxnor[23] + tmpxnor[23]
     end
+endmodule
+
+
+// Adapter
+// Reserved
+//
+module XNORConvBoxAdapter
+    #(parameter NUMHELPER = 4)
+    (
+        input wire clock,
+        input wire reset,
+        input wire [NUMHELPER-1:0] weight_in_valid;
+        input wire [25*NUMHELPER-1:0] pe_in_a,
+        input wire [25*NUMHELPER-1:0] pe_in_b,
+
+        output wire signed [6*NUMHELPER-1:0] pe_out_c
+    );
+    wire [24:0] in_a[NUMHELPER-1:0];
+    wire [24:0] in_b[NUMHELPER-1:0];
+    wire [5:0] out_c[NUMHELPER-1:0];
+    wire weight_valid[NUMHELPER-1:0]
+
+    genvar i;
+    generate
+        for (i = 0; i < NUMHELPER ; i++) begin
+            assign in_a[i] = pe_in_a[(i+1)*25-1:i*25];
+            assign in_b[i] = pe_in_b[(i+1)*25-1:i*25];
+            assign out_c[i] = pe_out_c[(i+1)*6-1:i*6];
+            assign weight_valid[i] = weight_in_valid[i];
+            always @(posedge clock) begin
+                if (reset) begin
+                    out_c[i] <= '0;
+                end
+                else begin
+                    out_c[i] <=  
+                end
+            end
+        end
+    endgenerate
+
+
 endmodule
