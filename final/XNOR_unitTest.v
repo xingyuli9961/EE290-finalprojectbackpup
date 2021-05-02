@@ -1,9 +1,8 @@
 /*
  This is the unit test for a single PE of the accelerator.
- Note: In the current simulator, we need to first set the in_b, and then in the next cycle raise up the in_valid.
  */
 
-module XNOR_unitTest;
+module XNOR_unitTest();
     reg clk, reset;
     reg [24:0] in_a;
     reg [24:0] in_b;
