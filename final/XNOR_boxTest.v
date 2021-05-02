@@ -27,7 +27,7 @@ module XNOR_boxTest();
 
         reset = 1'b0;
         @(posedge clk);
-
+        $display("test starts");
         for (i = 0; i < 20; i = i + 1) begin
             for (j = 0; j < 4; j = j + 1) begin
                 in_a[j] = $urandom(i+1);
@@ -44,6 +44,7 @@ module XNOR_boxTest();
                     $display("Expected: %b, but get: %b", result[j], out_c[j]);
                 end
             end
+            $display("Iteration %d pass", i);
         end
         $finish();
     end
