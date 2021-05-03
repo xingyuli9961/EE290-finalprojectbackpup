@@ -1,6 +1,10 @@
+/*
+ This file contains loop unrolling.
+ */
+
 #include<stdio.h> 
 #include<stdlib.h>
- #include<linux/types.h>
+#include<linux/types.h>
 
 #define TIMES 100
 #define SIZE 1024
