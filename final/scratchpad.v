@@ -4,37 +4,30 @@
  */
 
 module scratchpad
-    #(parameter NUMHELPER = 4, BITWIDTH=25, SIZE=256)
+    #(parameter NUMHELPER = 4, BITWIDTH=25, SIZE=16)
     (
         input wire clock,
+        input wire on,
         input wire write_enable,
-        input [$clog2(SIZE+1)-1 : 0] address,
-        input [$clog2(NUMHELPER+1)-1 : 0] data_mask,
+        input [$clog2(SIZE)-1 : 0] address,
         input [NUMHELPER*BITWIDTH-1:0] data_in,
         
-        output [NUMHELPER*BITWIDTH-1:0] data_out
+        output reg [NUMHELPER*BITWIDTH-1:0] data_out
     );
 
-    reg [BITWIDTH-1: 0] mem [$clog2(SIZE+1)-1 : 0];
-    integer i;
+    reg [NUMHELPER*BITWIDTH-1: 0] mem [SIZE-1 : 0];
     always @(posedge clock) begin
-        if (write_enable) begin
-            for (i=0; i<NUMHELPER ; i=i+1) begin
-                if (data_maks[i]) begin
-                    mem[address+i] <= data_in[(i+1)*BITWIDTH-1 : i*BITWIDTH];
-                end
-            end
-        end
-        for (i=0; i<NUMHELPER ; i=i+1) begin
-            if (data_maks[i]) begin
-                data_out[(i+1)*BITWIDTH-1 : i*BITWIDTH] <= mem[address+i];
-            end
+        if (on) begin
+            if (write_enable) begin
+                mem[address] <= data_in;
+            end 
             else begin
-                data_out[(i+1)*BITWIDTH-1 : i*BITWIDTH] <= 0;
-            end
+                data_out <= mem[address];
+            end               
         end
-    end
-
-
+        else begin
+            data_out <= 0;
+        end
+    end    
 endmodule
 
